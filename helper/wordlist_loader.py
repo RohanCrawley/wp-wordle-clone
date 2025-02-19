@@ -38,8 +38,6 @@ def main():
 
     cursor = db.cursor()
 
-    
-
     create_table(answer_words_table, cursor)
     create_table(guess_words_table, cursor)
 
