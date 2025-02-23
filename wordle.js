@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const grid = document.querySelector(".grid");
 
+
+    const keys = document.querySelectorAll(".key");
+    const enterKey = document.getElementById("enter-key");
+    const backspaceKey = document.getElementById("backspace-key");
+    // keys.forEach(key =>);
+
     function createGrid() {
         for (let i = 0; i < maxGuesses; i++) {
             const row = document.createElement("div");
@@ -18,6 +24,19 @@ document.addEventListener("DOMContentLoaded", function() {
             grid.appendChild(row);
         }
     }
+    function createBottomGrid() {
+        for (let i = 0; i < 3; i++) {
+            const row = document.createElement("div");
+            row.classList.add("row");
+            for (let j = 0; j < 5; j++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                row.appendChild(cell);
+            }
+            grid.appendChild(row);
+        }
+    }
+
 
     function handleGuess() {
         const input = document.getElementById("guess-input");
