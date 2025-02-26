@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const WORD_LENGTH = 5;
 
 
+
     function createGrid() {
         for (let i = 0; i < maxGuesses; i++) {
             const row = document.createElement("div");
@@ -27,41 +28,54 @@ document.addEventListener("DOMContentLoaded", function() {
             grid.appendChild(row);
         }
     }
-    function unBindCells(rowNumber) {
 
+    function bindCell(rowNum, cellNum) {
+        const row = document.querySelectorAll(".row")[rowNum];
+        const cell = row.children[cellNum];
+        cell.textContent = currentGuessArr[cellNum];
     }
 
-
-    function bindCells(rowNumber) {
-        const row = document.querySelectorAll(".row")[rowNumber];
+    function unBindCells(rowNum) {
+        const row = document.querySelectorAll(".row")[rowNum];
         for (let i = 0; i < WORD_LENGTH; i++) {
             const cell = row.children[i];
 
-            const state = new Proxy({ text: "" }, {
-                set(target, key, value) {
-                    target[key] = value;
-                    cell.textContent = value; // Update UI
-                    return true;
-                }
-            });
-            document.addEventListener("keydown", (e) => {
-                cell.textContent = currentGuessArr[i];
-            });
+            document.removeEventListener("keydown", bindCell(rowNum, i));
+        }
+    }
+
+    function bindCells(rowNum) {
+        const row = document.querySelectorAll(".row")[rowNum];
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const cell = row.children[i];
+
+            document.addEventListener("keydown", bindCell(rowNum, i));
         }
     }
 
 
     function handleGuess() {
-        const input = document.getElementById("guess-input");
-        const guess = input.value.toLowerCase();
+        const guess = currentGuessArr.join("");
+        
 
-        if (guess.length !== 5 || guesses.length >= maxGuesses || !allowedGuessWords.includes(guess)) {
-            alert("Invalid guess! " );
+        if (guess.length !== 5) {
+            alert("wrong length" );
             return;
         }
+        if (guesses.length >= maxGuesses) {
+            alert("no more guesses")
+            return;
+        }
+        if (!allowedGuessWords.includes(guess)) {
+            alert("not in word list")
+            return;
+        }
+
+        guesses.push(guess);
+        const rowNum = guesses.length - 1;
         
         guesses.push(guess);
-        const row = document.querySelectorAll(".row")[guesses.length - 1];
+        const row = document.querySelectorAll(".row")[rowNum];
         
         //create a map that starts with storing how many of each letter is in the answer word. 
         //Then every time we highlight a letter we decrement that, and we don’t highlight a letter if that letter in the map is at zero
@@ -108,11 +122,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
         }
-        input.value = "";
+        
+        currentGuessArr.splice(0, currentGuessArr.length);
         if (guess === answerWord) {
             alert("Congratulations! You guessed the word!");
         } else if (guesses.length === maxGuesses) {
             alert("Game over! The word was " + answerWord);
+        }
+        else { //move entry to next row
+            unBindCells(rowNum);
+            bindCells(rowNum + 1);
         }
     }
     
@@ -126,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
         switch (event.key) {
             case "Enter":
                 console.log("Enter key was pressed!");
+                handleGuess();
                 break;
             case "Backspace":
                 console.log("Backspace key was pressed!");
@@ -143,8 +163,9 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log(currentGuessArr);
 
     });
+    bindCells(0); //Guess is entered on the first row to start
 
-    bindCells(0);
+
 
 
 });
