@@ -11,12 +11,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const enterKey = document.getElementById("enter-key");
     const backspaceKey = document.getElementById("backspace-key");
     //const guessedLetters = new Map(); 
-    const currentGuessArr = []
+    const currentGuessArr = [];
+    const WORD_LENGTH = 5;
 
-
-
-
-    
 
     function createGrid() {
         for (let i = 0; i < maxGuesses; i++) {
@@ -30,7 +27,28 @@ document.addEventListener("DOMContentLoaded", function() {
             grid.appendChild(row);
         }
     }
+    function unBindCells(rowNumber) {
 
+    }
+
+
+    function bindCells(rowNumber) {
+        const row = document.querySelectorAll(".row")[rowNumber];
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const cell = row.children[i];
+
+            const state = new Proxy({ text: "" }, {
+                set(target, key, value) {
+                    target[key] = value;
+                    cell.textContent = value; // Update UI
+                    return true;
+                }
+            });
+            document.addEventListener("keydown", (e) => {
+                cell.textContent = currentGuessArr[i];
+            });
+        }
+    }
 
 
     function handleGuess() {
@@ -103,23 +121,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-    //Add listener for keypress, 
-    function keyPress(event) {
-        c = event.key.textContent;
-        console.log(event.code);
-        console.log(typeof event.code);
+    //Add listener for keypress
+    document.addEventListener("keydown", function(event) {
+        switch (event.key) {
+            case "Enter":
+                console.log("Enter key was pressed!");
+                break;
+            case "Backspace":
+                console.log("Backspace key was pressed!");
+                currentGuessArr.pop();
+                break;
+            default:
+                if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)
+                    && currentGuessArr.length < WORD_LENGTH) {
+                    currentGuessArr.push(event.key);
 
-        console.log(typeof c);
-
-        if (c.toLowerCase() != c.toUpperCase()) {
-            
+                    console.log(`Letter key '${event.key}' was pressed!`);
+                }
+                break;
         }
+        console.log(currentGuessArr);
 
+    });
 
-        
-
-    }
-    document.addEventListener("keydown", keyPress);
+    bindCells(0);
 
 
 });
