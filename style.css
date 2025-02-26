@@ -51,24 +51,16 @@
     display:flex;
     justify-content: center;
 }
-.key{
+.key {
     width: 40px;
-    height: 20px;
+    height: 50px;
+    margin: 5px;
+    font-size: 18px;
+    border: none;
+    background-color: #ccc;
+    cursor: pointer;
+    border-radius: 5px;
 }
 .big-key {
-    width: 80px;
-}
-.correct {
-    background-color: green;
-    color: white;
-}
-
-.present {
-    background-color: orange;
-    color: white;
-}
-
-.absent {
-    background-color: gray;
-    color: white;
+    width: 100px;
 }

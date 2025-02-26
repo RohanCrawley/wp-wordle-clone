@@ -10,7 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const keys = document.querySelectorAll(".key");
     const enterKey = document.getElementById("enter-key");
     const backspaceKey = document.getElementById("backspace-key");
-    // keys.forEach(key =>);
+    //const guessedLetters = new Map(); 
+    const currentGuessArr = []
+
+
+
+
+    
 
     function createGrid() {
         for (let i = 0; i < maxGuesses; i++) {
@@ -24,18 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
             grid.appendChild(row);
         }
     }
-    function createBottomGrid() {
-        for (let i = 0; i < 3; i++) {
-            const row = document.createElement("div");
-            row.classList.add("row");
-            for (let j = 0; j < 5; j++) {
-                const cell = document.createElement("div");
-                cell.classList.add("cell");
-                row.appendChild(cell);
-            }
-            grid.appendChild(row);
-        }
-    }
+
 
 
     function handleGuess() {
@@ -46,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Invalid guess! " );
             return;
         }
-
+        
         guesses.push(guess);
         const row = document.querySelectorAll(".row")[guesses.length - 1];
         
@@ -60,9 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
         for (let i = 0; i < 5; i++) {
             answerLetterCounts.set(answerWord[i], answerLetterCounts.get(answerWord[i]) + 1) //Increment
         }
-
-
-
+        //Highlight correct letters in guess
         //First pass highlight green
         for (let i = 0; i < 5; i++) {
             const cell = row.children[i];
@@ -85,7 +78,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 answerLetterCounts.set(guess[i], answerLetterCounts.get(guess[i]) - 1) //Decrement
             } 
         }
+        //Highlight keyboard
+        for (let i = 0; i < 5; i++) {
+            if (guess[i] === answerWord[i]) {
+                console.log(guess[i]);
+                console.log(document.getElementById(guess[i]));
+                document.getElementById(guess[i]).style.backgroundColor = "green";
+            }
+            else if (answerWord.includes(guess[i])) {
+                document.getElementById(guess[i]).style.backgroundColor = "yellow"
+            }
 
+        }
         input.value = "";
         if (guess === answerWord) {
             alert("Congratulations! You guessed the word!");
@@ -93,7 +97,29 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Game over! The word was " + answerWord);
         }
     }
-
+    
     document.getElementById("submit-guess").addEventListener("click", handleGuess);
     createGrid();
+
+
+
+    //Add listener for keypress, 
+    function keyPress(event) {
+        c = event.key.textContent;
+        console.log(event.code);
+        console.log(typeof event.code);
+
+        console.log(typeof c);
+
+        if (c.toLowerCase() != c.toUpperCase()) {
+            
+        }
+
+
+        
+
+    }
+    document.addEventListener("keydown", keyPress);
+
+
 });
