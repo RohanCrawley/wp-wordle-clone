@@ -68,7 +68,6 @@ function wp_wordle_shortcode() {
             <!-- JavaScript will populate the grid -->
         </div>
         <!-- Input for player guesses -->
-        <input type="text" id="guess-input" maxlength="5" placeholder="Enter guess" />
         <button id="submit-guess">Submit Guess</button>
 
         <div id="keyboard">
